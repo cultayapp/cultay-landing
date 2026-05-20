@@ -142,17 +142,17 @@
     }
     .hero-form input[type="email"] {
       flex: 1;
-      background: white;
-      border: 1.5px solid var(--line-med);
+      background: var(--arena);
+      border: 1.5px solid rgba(31,22,18,0.20);
       border-radius: 8px;
       padding: 13px 16px;
       font-size: 15px;
       color: var(--ink);
       outline: none;
-      transition: border-color 0.15s;
+      transition: border-color 0.15s, background 0.15s;
     }
-    .hero-form input[type="email"]:focus { border-color: var(--vermut); }
-    .hero-form input[type="email"]::placeholder { color: rgba(31,22,18,0.35); }
+    .hero-form input[type="email"]:focus { border-color: var(--vermut); background: var(--hueso); }
+    .hero-form input[type="email"]::placeholder { color: rgba(31,22,18,0.40); }
     .hero-form button[type="submit"] {
       background: var(--vermut);
       color: white;
@@ -445,11 +445,22 @@
       gap: 20px;
     }
     .pillar {
-      background: white;
-      border: 1px solid var(--line);
+      background: var(--arena);
+      border: 1.5px solid rgba(31,22,18,0.12);
       border-radius: 14px;
       padding: 32px 28px;
+      position: relative;
+      overflow: hidden;
     }
+    .pillar::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+    .pillar:nth-child(1)::before { background: var(--mantequilla); }
+    .pillar:nth-child(2)::before { background: var(--coral); }
+    .pillar:nth-child(3)::before { background: var(--pistacho); }
     .pillar-number {
       font-family: 'Geist Mono', monospace;
       font-size: 10px;
@@ -614,9 +625,9 @@
       font-weight: 500;
       padding: 7px 12px;
       border-radius: 8px;
-      border: 1.5px solid var(--line-med);
+      border: 1.5px solid rgba(31,22,18,0.18);
       color: var(--ink);
-      background: white;
+      background: var(--arena);
     }
     .mood-tile.active {
       border-color: var(--vermut);
@@ -782,17 +793,17 @@
     }
     .waitlist-form input[type="email"] {
       flex: 1;
-      background: white;
-      border: 1.5px solid var(--line-med);
+      background: var(--arena);
+      border: 1.5px solid rgba(31,22,18,0.20);
       border-radius: 10px;
       padding: 16px 18px;
       font-size: 16px;
       color: var(--ink);
       outline: none;
-      transition: border-color 0.15s;
+      transition: border-color 0.15s, background 0.15s;
     }
-    .waitlist-form input[type="email"]:focus { border-color: var(--vermut); }
-    .waitlist-form input[type="email"]::placeholder { color: rgba(31,22,18,0.3); }
+    .waitlist-form input[type="email"]:focus { border-color: var(--vermut); background: var(--hueso); }
+    .waitlist-form input[type="email"]::placeholder { color: rgba(31,22,18,0.40); }
     .waitlist-form button[type="submit"] {
       background: var(--vermut);
       color: white;
@@ -908,7 +919,7 @@
             no sabes <span class="accent">qué poner.</span>
           </h1>
           <p class="hero-sub">
-            cultay. es la app que unifica tus libros, películas y series en un solo lugar — y te dice qué consumir cuando llevas veinte minutos mirando el techo.
+            cultay. es la app que unifica tus libros, películas y series en un solo lugar — y te dice qué hacer cuando llevas veinte minutos ojeando sin saber qué decidir.
           </p>
           <form class="hero-form" id="hero-form" onsubmit="handleHeroSubmit(event)">
             <input type="email" placeholder="tu@email.com" required autocomplete="email" />
@@ -989,7 +1000,7 @@
       <div class="stats-grid">
         <div class="stat">
           <div class="stat-number">75<span class="stat-accent">M</span></div>
-          <div class="stat-label">usuarios de Goodreads<br>que odian Goodreads</div>
+          <div class="stat-label">amantes de los libros<br>sin la app que merecen</div>
         </div>
         <div class="stat">
           <div class="stat-number">3</div>
@@ -1021,25 +1032,25 @@
         <div class="app-card">
           <div class="app-card-type type-libros">📚 Libros</div>
           <div class="app-name">Goodreads</div>
-          <p class="app-verdict">75 millones de usuarios. Comprada por Amazon en 2013. Sin actualizaciones desde entonces.</p>
-          <div class="app-pain">"Aspecto de web del año 2000. El buscador falla. Es el Google+ del mundo literario: todo el mundo lo critica y nadie se va... todavía."</div>
+          <p class="app-verdict">La comunidad de lectores más grande del mundo. 75 millones de usuarios que confían en ella para llevar el registro de sus lecturas.</p>
+          <div class="app-pain">Pensada solo para libros. Si también ves series o películas, necesitas abrir otra app — y otra, y otra.</div>
         </div>
         <div class="app-card">
           <div class="app-card-type type-peliculas">🎬 Películas</div>
           <div class="app-name">Letterboxd</div>
-          <p class="app-verdict">Referente de diseño. Pero solo hace películas — sin series, sin libros. Y la app de iOS está "rota".</p>
-          <div class="app-pain">"2,94 sobre 5 en Google Play. Fallos frecuentes en iPhone. Genial si solo ves cine y no te importan las series."</div>
+          <p class="app-verdict">El estándar de oro del cine en digital. Diseño impecable, comunidad apasionada y millones de reseñas de películas.</p>
+          <div class="app-pain">Solo películas. Si también lees o sigues series, sigue siendo una pieza más del puzzle.</div>
         </div>
         <div class="app-card">
           <div class="app-card-type type-series">📺 Series</div>
           <div class="app-name">TVTime</div>
-          <p class="app-verdict">30 millones de usuarios registrados. Retirada temporalmente de la App Store en 2024 por disputa de derechos.</p>
-          <div class="app-pain">"Solo series. Vende tus datos a estudios y anunciantes. Crisis de confianza sin resolver."</div>
+          <p class="app-verdict">El tracker de series más conocido a nivel global. 30 millones de usuarios que no quieren perder el hilo de sus series favoritas.</p>
+          <div class="app-pain">Solo series. Sin libros, sin películas, y sin una comunidad hispanohablante que lo sienta propio.</div>
         </div>
       </div>
       <div class="problem-coda">
         <div class="problem-coda-quote">
-          Los millennials y la Gen Z consumen libros, películas y series como parte del <span class="hl">mismo stack cultural.</span> No deberían necesitar tres apps distintas para gestionarlo.
+          Consumes libros, series y películas como parte de lo mismo — porque <span class="hl">lo son.</span> Ya es hora de tener una sola app que lo entienda así.
         </div>
       </div>
     </div>
