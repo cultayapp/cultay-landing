@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cultay. — Todo lo que lees, ves y amas, en un solo lugar</title>
+  <meta name="description" content="La app que unifica tus libros, películas y series. Con un motor de recomendación que sabe qué te apetece hoy." />
+  <meta property="og:title" content="cultay. — Todo lo que lees, ves y amas" />
+  <meta property="og:description" content="Una sola app para gestionar libros, películas y series. Y para saber qué consumir cuando no tienes ni idea." />
+  <meta property="og:type" content="website" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" />
+
+  <style>
+    /* ── TOKENS ─────────────────────────────────────────────────────── */
+    :root {
+      --hueso:       #F2E7CE;
+      --arena:       #E5D5B5;
+      --ink:         #1F1612;
+      --vermut:      #B22838;
+      --coral:       #F47265;
+      --pistacho:    #BFCB5C;
+      --mantequilla: #E8BE5A;
+      --berenjena:   #381B2A;
+      --line:        rgba(31,22,18,0.10);
+      --line-med:    rgba(31,22,18,0.18);
+
+      --display: 'Bricolage Grotesque', sans-serif;
+      --ui:      'Geist', sans-serif;
+      --mono:    'Geist Mono', monospace;
+    }
+
+    /* ── RESET ──────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--hueso);
+      color: var(--ink);
+      font-family: 'Geist', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    img, svg { display: block; }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; border: none; background: none; font: inherit; }
+    input { font: inherit; }
+
+    /* ── HELPERS ────────────────────────────────────────────────────── */
+    .container {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .mono {
+      font-family: 'Geist Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+    .display {
+      font-family: 'Bricolage Grotesque', sans-serif;
+    }
+
+    /* ── NAV ────────────────────────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--hueso);
+      border-bottom: 1px solid var(--line);
+      padding: 14px 0;
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .wordmark {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: 26px;
+      letter-spacing: -0.045em;
+      line-height: 1;
+      display: inline-flex;
+      align-items: flex-end;
+      color: var(--ink);
+    }
+    .wordmark .dot { color: var(--vermut); }
+    .nav-cta {
+      background: var(--ink);
+      color: var(--hueso);
+      font-family: 'Geist', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 10px 20px;
+      border-radius: 6px;
+      transition: background 0.18s;
+    }
+    .nav-cta:hover { background: var(--berenjena); }
+
+    /* ── HERO ───────────────────────────────────────────────────────── */
+    .hero {
+      padding: 80px 0 96px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .hero-label {
+      color: var(--vermut);
+      margin-bottom: 24px;
+    }
+    .hero-heading {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: clamp(44px, 5.5vw, 72px);
+      letter-spacing: -0.04em;
+      line-height: 0.93;
+      margin-bottom: 28px;
+      color: var(--ink);
+    }
+    .hero-heading .accent { color: var(--vermut); }
+    .hero-sub {
+      font-size: 18px;
+      line-height: 1.55;
+      color: rgba(31,22,18,0.7);
+      margin-bottom: 40px;
+      max-width: 420px;
+    }
+    .hero-form {
+      display: flex;
+      gap: 8px;
+      max-width: 440px;
+    }
+    .hero-form input[type="email"] {
+      flex: 1;
+      background: white;
+      border: 1.5px solid var(--line-med);
+      border-radius: 8px;
+      padding: 13px 16px;
+      font-size: 15px;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .hero-form input[type="email"]:focus { border-color: var(--vermut); }
+    .hero-form input[type="email"]::placeholder { color: rgba(31,22,18,0.35); }
+    .hero-form button[type="submit"] {
+      background: var(--vermut);
+      color: white;
+      font-family: 'Geist', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 13px 22px;
+      border-radius: 8px;
+      white-space: nowrap;
+      transition: background 0.18s, transform 0.12s;
+    }
+    .hero-form button[type="submit"]:hover { background: #941f2a; }
+    .hero-form button[type="submit"]:active { transform: scale(0.97); }
+    .hero-footnote {
+      margin-top: 14px;
+      font-size: 13px;
+      color: rgba(31,22,18,0.45);
+    }
+
+    /* Phone mockup */
+    .phone-wrap {
+      display: flex;
+      justify-content: center;
+      position: relative;
+    }
+    .phone {
+      width: 260px;
+      height: 540px;
+      background: var(--berenjena);
+      border-radius: 36px;
+      border: 1.5px solid rgba(255,255,255,0.06);
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 32px 80px -16px rgba(56,27,42,0.45), 0 4px 12px rgba(0,0,0,0.12);
+    }
+    .phone-status {
+      height: 36px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 0 20px 6px;
+      font-family: 'Geist', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--hueso);
+    }
+    .phone-battery {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .phone-battery-shell {
+      width: 18px;
+      height: 10px;
+      border-radius: 2.5px;
+      border: 1px solid var(--hueso);
+      position: relative;
+      opacity: 0.8;
+    }
+    .phone-battery-fill {
+      position: absolute;
+      inset: 1.5px;
+      width: 65%;
+      background: var(--hueso);
+      border-radius: 1px;
+    }
+    .phone-body {
+      padding: 0 18px;
+      height: calc(100% - 36px - 64px);
+      overflow: hidden;
+    }
+    .phone-nav-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background: var(--ink);
+      border-top: 1px solid rgba(242,231,206,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 8px 10px;
+    }
+    .phone-nav-icon { opacity: 0.35; }
+    .phone-nav-icon.active { opacity: 1; }
+    .phone-nav-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--coral);
+      margin: 3px auto 0;
+    }
+
+    /* Phone content */
+    .phone-label {
+      font-family: 'Geist Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--pistacho);
+      margin-bottom: 6px;
+    }
+    .phone-heading {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: 26px;
+      letter-spacing: -0.04em;
+      line-height: 0.95;
+      color: var(--hueso);
+      margin-bottom: 16px;
+    }
+    .phone-heading .ph-dot { color: var(--coral); }
+    .phone-card {
+      background: var(--ink);
+      border: 1px solid rgba(242,231,206,0.08);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 8px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .phone-card-cover {
+      width: 44px;
+      height: 62px;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+    .phone-card-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: -0.02em;
+      color: var(--hueso);
+      margin-bottom: 3px;
+    }
+    .phone-card-meta {
+      font-family: 'Geist Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      color: rgba(242,231,206,0.45);
+      text-transform: uppercase;
+    }
+    .phone-badge {
+      margin-left: auto;
+      font-family: 'Geist Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      padding: 3px 7px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .badge-coral { background: rgba(244,114,101,0.15); color: var(--coral); }
+    .badge-pistacho { background: rgba(191,203,92,0.15); color: var(--pistacho); }
+    .badge-mantequilla { background: rgba(232,190,90,0.15); color: var(--mantequilla); }
+
+    /* floating pills on hero bg */
+    .hero-pill {
+      position: absolute;
+      font-family: 'Geist Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      border-radius: 100px;
+      border: 1px solid var(--line-med);
+      background: white;
+      color: rgba(31,22,18,0.55);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* ── PROBLEM SECTION ────────────────────────────────────────────── */
+    .problem {
+      background: var(--ink);
+      color: var(--hueso);
+      padding: 96px 0;
+    }
+    .problem-label { color: var(--coral); margin-bottom: 24px; }
+    .problem-heading {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: clamp(36px, 4vw, 56px);
+      letter-spacing: -0.04em;
+      line-height: 0.95;
+      margin-bottom: 20px;
+      max-width: 700px;
+    }
+    .problem-sub {
+      font-size: 17px;
+      color: rgba(242,231,206,0.6);
+      max-width: 580px;
+      margin-bottom: 64px;
+      line-height: 1.6;
+    }
+    .apps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+    .app-card {
+      background: rgba(242,231,206,0.04);
+      border: 1px solid rgba(242,231,206,0.08);
+      padding: 32px 28px;
+      position: relative;
+    }
+    .app-card:first-child { border-radius: 12px 0 0 12px; }
+    .app-card:last-child  { border-radius: 0 12px 12px 0; }
+    .app-card-type {
+      font-family: 'Geist Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .type-libros   { color: var(--mantequilla); }
+    .type-peliculas { color: var(--coral); }
+    .type-series   { color: var(--pistacho); }
+    .app-name {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+      color: var(--hueso);
+    }
+    .app-verdict {
+      font-size: 14px;
+      color: rgba(242,231,206,0.45);
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    .app-pain {
+      font-family: 'Geist Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      padding: 8px 12px;
+      border-radius: 6px;
+      background: rgba(242,231,206,0.06);
+      color: rgba(242,231,206,0.5);
+      line-height: 1.5;
+    }
+    .problem-coda {
+      margin-top: 48px;
+      padding: 32px;
+      border: 1px solid rgba(242,231,206,0.12);
+      border-radius: 12px;
+      background: rgba(242,231,206,0.03);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .problem-coda-quote {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 600;
+      font-size: 20px;
+      letter-spacing: -0.025em;
+      color: var(--hueso);
+      flex: 1;
+      line-height: 1.35;
+    }
+    .problem-coda-quote .hl { color: var(--coral); }
+
+    /* ── SOLUTION SECTION ───────────────────────────────────────────── */
+    .solution {
+      padding: 96px 0;
+      background: var(--hueso);
+    }
+    .section-label { margin-bottom: 24px; }
+    .section-heading {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: clamp(36px, 4vw, 56px);
+      letter-spacing: -0.04em;
+      line-height: 0.93;
+      margin-bottom: 16px;
+    }
+    .section-heading .accent { color: var(--vermut); }
+    .section-sub {
+      font-size: 17px;
+      color: rgba(31,22,18,0.6);
+      max-width: 560px;
+      line-height: 1.6;
+      margin-bottom: 64px;
+    }
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .pillar {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 32px 28px;
+    }
+    .pillar-number {
+      font-family: 'Geist Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      color: var(--vermut);
+      margin-bottom: 16px;
+    }
+    .pillar-icon {
+      margin-bottom: 20px;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pillar-icon-1 { background: rgba(232,190,90,0.15); }
+    .pillar-icon-2 { background: rgba(244,114,101,0.15); }
+    .pillar-icon-3 { background: rgba(191,203,92,0.15); }
+    .pillar-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: -0.025em;
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+    .pillar-desc {
+      font-size: 14px;
+      line-height: 1.6;
+      color: rgba(31,22,18,0.6);
+    }
+    .pillar-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 18px;
+    }
+    .tag {
+      font-family: 'Geist Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      padding: 4px 9px;
+      border-radius: 4px;
+      background: rgba(31,22,18,0.06);
+      color: rgba(31,22,18,0.5);
+    }
+
+    /* ── APETECE SECTION ────────────────────────────────────────────── */
+    .apetece {
+      padding: 96px 0;
+      background: var(--arena);
+      overflow: hidden;
+    }
+    .apetece-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 72px;
+      align-items: center;
+    }
+    .apetece-label { color: var(--vermut); margin-bottom: 24px; }
+    .apetece-heading {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: clamp(36px, 4vw, 54px);
+      letter-spacing: -0.04em;
+      line-height: 0.93;
+      margin-bottom: 20px;
+    }
+    .apetece-heading .accent { color: var(--vermut); }
+    .apetece-sub {
+      font-size: 17px;
+      line-height: 1.6;
+      color: rgba(31,22,18,0.65);
+      margin-bottom: 36px;
+    }
+    .apetece-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .apetece-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--vermut);
+      color: white;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .step-text {
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--ink);
+    }
+    .step-text strong { font-weight: 600; }
+
+    /* Apetece phone */
+    .apetece-phone {
+      width: 280px;
+      height: 580px;
+      background: var(--hueso);
+      border-radius: 38px;
+      border: 1.5px solid var(--line-med);
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 28px 64px -16px rgba(56,27,42,0.2), 0 2px 6px rgba(0,0,0,0.06);
+      margin: 0 auto;
+    }
+    .apetece-phone-body {
+      padding: 42px 20px 24px;
+      height: 100%;
+    }
+    .apetece-q-label {
+      font-family: 'Geist Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--vermut);
+      margin-bottom: 8px;
+    }
+    .apetece-q-heading {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: -0.035em;
+      line-height: 1;
+      margin-bottom: 24px;
+      color: var(--ink);
+    }
+    .apetece-q-heading .qdot { color: var(--vermut); }
+    .mood-group {
+      margin-bottom: 20px;
+    }
+    .mood-group-label {
+      font-family: 'Geist Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(31,22,18,0.45);
+      margin-bottom: 8px;
+    }
+    .mood-tiles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .mood-tile {
+      font-family: 'Geist', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 7px 12px;
+      border-radius: 8px;
+      border: 1.5px solid var(--line-med);
+      color: var(--ink);
+      background: white;
+    }
+    .mood-tile.active {
+      border-color: var(--vermut);
+      background: var(--vermut);
+      color: white;
+    }
+    .apetece-cta-btn {
+      margin-top: 24px;
+      width: 100%;
+      background: var(--ink);
+      color: var(--hueso);
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: -0.02em;
+      padding: 14px;
+      border-radius: 10px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    /* ── STATS BAR ──────────────────────────────────────────────────── */
+    .stats {
+      padding: 56px 0;
+      background: var(--hueso);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+    .stat {
+      padding: 0 32px;
+      text-align: center;
+      border-right: 1px solid var(--line);
+    }
+    .stat:first-child { border-left: 1px solid var(--line); }
+    .stat-number {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: 40px;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .stat-number .stat-accent { color: var(--vermut); }
+    .stat-label {
+      font-family: 'Geist Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(31,22,18,0.5);
+      line-height: 1.4;
+    }
+
+    /* ── COMUNIDAD SECTION ──────────────────────────────────────────── */
+    .comunidad {
+      padding: 96px 0;
+      background: var(--berenjena);
+      color: var(--hueso);
+      position: relative;
+      overflow: hidden;
+    }
+    .comunidad::before {
+      content: 'cultay.';
+      position: absolute;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: 220px;
+      letter-spacing: -0.06em;
+      color: rgba(242,231,206,0.04);
+      top: -30px;
+      right: -20px;
+      pointer-events: none;
+      line-height: 1;
+      user-select: none;
+    }
+    .comunidad-label { color: var(--pistacho); margin-bottom: 24px; }
+    .comunidad-heading {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: clamp(36px, 4vw, 56px);
+      letter-spacing: -0.04em;
+      line-height: 0.93;
+      margin-bottom: 20px;
+      max-width: 680px;
+    }
+    .comunidad-sub {
+      font-size: 17px;
+      line-height: 1.6;
+      color: rgba(242,231,206,0.6);
+      max-width: 540px;
+      margin-bottom: 52px;
+    }
+    .bullets-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      max-width: 680px;
+    }
+    .bullet {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 20px;
+      border: 1px solid rgba(242,231,206,0.08);
+      border-radius: 10px;
+      background: rgba(242,231,206,0.04);
+    }
+    .bullet-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 6px;
+    }
+    .bullet-text {
+      font-size: 14px;
+      line-height: 1.5;
+      color: rgba(242,231,206,0.7);
+    }
+    .bullet-text strong { color: var(--hueso); font-weight: 600; }
+
+    /* ── WAITLIST / FINAL CTA ───────────────────────────────────────── */
+    .waitlist {
+      padding: 96px 0 112px;
+      background: var(--hueso);
+      text-align: center;
+    }
+    .waitlist-label { color: var(--vermut); margin-bottom: 24px; display: block; }
+    .waitlist-heading {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800;
+      font-size: clamp(40px, 5vw, 68px);
+      letter-spacing: -0.04em;
+      line-height: 0.93;
+      margin-bottom: 20px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .waitlist-heading .accent { color: var(--vermut); }
+    .waitlist-sub {
+      font-size: 18px;
+      line-height: 1.55;
+      color: rgba(31,22,18,0.6);
+      max-width: 480px;
+      margin: 0 auto 44px;
+    }
+    .waitlist-form-wrap {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .waitlist-form {
+      display: flex;
+      gap: 8px;
+    }
+    .waitlist-form input[type="email"] {
+      flex: 1;
+      background: white;
+      border: 1.5px solid var(--line-med);
+      border-radius: 10px;
+      padding: 16px 18px;
+      font-size: 16px;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .waitlist-form input[type="email"]:focus { border-color: var(--vermut); }
+    .waitlist-form input[type="email"]::placeholder { color: rgba(31,22,18,0.3); }
+    .waitlist-form button[type="submit"] {
+      background: var(--vermut);
+      color: white;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 16px 24px;
+      border-radius: 10px;
+      white-space: nowrap;
+      letter-spacing: -0.02em;
+      transition: background 0.18s, transform 0.12s;
+    }
+    .waitlist-form button[type="submit"]:hover { background: #941f2a; }
+    .waitlist-form button[type="submit"]:active { transform: scale(0.97); }
+    .waitlist-footnote {
+      margin-top: 14px;
+      font-size: 13px;
+      color: rgba(31,22,18,0.4);
+    }
+    .success-msg {
+      display: none;
+      text-align: center;
+      padding: 20px;
+      background: rgba(191,203,92,0.12);
+      border: 1px solid rgba(191,203,92,0.3);
+      border-radius: 10px;
+      color: var(--ink);
+      font-size: 15px;
+    }
+    .success-msg.show { display: block; }
+
+    /* ── FOOTER ─────────────────────────────────────────────────────── */
+    footer {
+      background: var(--ink);
+      color: var(--hueso);
+      padding: 40px 0;
+    }
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-wordmark {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: -0.045em;
+      color: var(--hueso);
+    }
+    .footer-wordmark .dot { color: var(--vermut); }
+    .footer-copy {
+      font-family: 'Geist Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: rgba(242,231,206,0.3);
+      text-transform: uppercase;
+    }
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+    .footer-link {
+      font-size: 13px;
+      color: rgba(242,231,206,0.45);
+      transition: color 0.15s;
+    }
+    .footer-link:hover { color: var(--hueso); }
+
+    /* ── RESPONSIVE ─────────────────────────────────────────────────── */
+    @media (max-width: 860px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 56px; }
+      .phone-wrap { order: -1; }
+      .apps-grid { grid-template-columns: 1fr; gap: 2px; }
+      .app-card:first-child { border-radius: 12px 12px 0 0; }
+      .app-card:last-child  { border-radius: 0 0 12px 12px; }
+      .pillars-grid { grid-template-columns: 1fr; }
+      .apetece-grid { grid-template-columns: 1fr; gap: 56px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+      .stat { border: 1px solid var(--line); border-radius: 10px; padding: 24px; }
+      .stat:first-child { border: 1px solid var(--line); }
+      .bullets-grid { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; gap: 20px; text-align: center; }
+      .footer-links { flex-wrap: wrap; justify-content: center; }
+      .hero-form { flex-direction: column; }
+      .waitlist-form { flex-direction: column; }
+    }
+    @media (max-width: 540px) {
+      .hero { padding: 56px 0 72px; }
+      .problem, .solution, .apetece, .comunidad, .waitlist { padding: 72px 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ─────────────────────────────────────────────────────────── -->
+  <nav>
+    <div class="container">
+      <div class="nav-inner">
+        <a href="#" class="wordmark">cultay<span class="dot">.</span></a>
+        <a href="#waitlist" class="nav-cta">Acceso anticipado</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── HERO ────────────────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div>
+          <p class="mono hero-label">Ahora en beta privada</p>
+          <h1 class="hero-heading">
+            Todo lo que lees, ves y<br/>
+            no sabes <span class="accent">qué poner.</span>
+          </h1>
+          <p class="hero-sub">
+            cultay. es la app que unifica tus libros, películas y series en un solo lugar — y te dice qué consumir cuando llevas veinte minutos mirando el techo.
+          </p>
+          <form class="hero-form" id="hero-form" onsubmit="handleHeroSubmit(event)">
+            <input type="email" placeholder="tu@email.com" required autocomplete="email" />
+            <button type="submit">Quiero acceso</button>
+          </form>
+          <p class="hero-footnote">Sin spam. Solo un aviso cuando abra la beta.</p>
+        </div>
+        <div class="phone-wrap">
+          <!-- Phone mockup: dark mode "¿Qué me apetece?" screen -->
+          <div class="phone">
+            <div class="phone-status">
+              <span>9:41</span>
+              <div class="phone-battery">
+                <div class="phone-battery-shell"><div class="phone-battery-fill"></div></div>
+              </div>
+            </div>
+            <div class="phone-body">
+              <!-- Wordmark in phone -->
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                <div style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px;letter-spacing:-0.04em;color:#F2E7CE;line-height:1;">
+                  cultay<span style="color:#F47265;">.</span>
+                </div>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F2E7CE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"><circle cx="11" cy="11" r="6"/><path d="M16 16 L21 21"/></svg>
+              </div>
+              <div class="phone-label">Para ti esta noche</div>
+              <div class="phone-heading">Algo denso<br>para el finde<span class="ph-dot">.</span></div>
+              <!-- Cards -->
+              <div class="phone-card">
+                <div class="phone-card-cover" style="background:linear-gradient(135deg,#2a1a2e,#4a2040);"></div>
+                <div style="flex:1;min-width:0;">
+                  <div class="phone-card-title">Dune</div>
+                  <div class="phone-card-meta">película · 2021</div>
+                </div>
+                <span class="phone-badge badge-coral">quiero verla</span>
+              </div>
+              <div class="phone-card">
+                <div class="phone-card-cover" style="background:linear-gradient(135deg,#1a2a1f,#2f4a35);"></div>
+                <div style="flex:1;min-width:0;">
+                  <div class="phone-card-title">The Last of Us</div>
+                  <div class="phone-card-meta">serie · HBO</div>
+                </div>
+                <span class="phone-badge badge-pistacho">en curso</span>
+              </div>
+              <div class="phone-card">
+                <div class="phone-card-cover" style="background:linear-gradient(135deg,#2a1f10,#4a3820);"></div>
+                <div style="flex:1;min-width:0;">
+                  <div class="phone-card-title">El problema de los tres cuerpos</div>
+                  <div class="phone-card-meta">libro · Liu Cixin</div>
+                </div>
+                <span class="phone-badge badge-mantequilla">leyendo</span>
+              </div>
+            </div>
+            <!-- Bottom nav -->
+            <div class="phone-nav-bar">
+              <div class="phone-nav-icon active">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F47265" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12 L12 4 L21 12 V20 H3 Z"/></svg>
+                <div class="phone-nav-dot"></div>
+              </div>
+              <div class="phone-nav-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(242,231,206,0.35)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 9 H20 M9 4 V20"/></svg>
+              </div>
+              <div class="phone-nav-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="rgba(242,231,206,0.35)" stroke="rgba(242,231,206,0.35)" stroke-width="1.5"><path d="M12 2 L13.5 10 L21.5 12 L13.5 14 L12 22 L10.5 14 L2.5 12 L10.5 10 Z"/></svg>
+              </div>
+              <div class="phone-nav-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(242,231,206,0.35)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20 C 4 16 8 14 12 14 C 16 14 20 16 20 20"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STATS ───────────────────────────────────────────────────────── -->
+  <div class="stats">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat">
+          <div class="stat-number">75<span class="stat-accent">M</span></div>
+          <div class="stat-label">usuarios de Goodreads<br>que odian Goodreads</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">3</div>
+          <div class="stat-label">apps que tienes que abrir<br>para gestionar tu cultura</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">0</div>
+          <div class="stat-label">apps en español que<br>lo unifican todo</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">500<span class="stat-accent">M</span></div>
+          <div class="stat-label">hispanohablantes sin<br>una app que los trate bien</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PROBLEM ─────────────────────────────────────────────────────── -->
+  <section class="problem">
+    <div class="container">
+      <p class="mono problem-label">El problema</p>
+      <h2 class="problem-heading">
+        Tienes tres apps para una sola vida cultural.
+      </h2>
+      <p class="problem-sub">
+        Goodreads para libros, Letterboxd para pelis, algún intento fallido para series. Y luego las notas del móvil, los mensajes a amigos y esa lista mental que siempre se borra.
+      </p>
+      <div class="apps-grid">
+        <div class="app-card">
+          <div class="app-card-type type-libros">📚 Libros</div>
+          <div class="app-name">Goodreads</div>
+          <p class="app-verdict">75 millones de usuarios. Comprada por Amazon en 2013. Sin actualizaciones desde entonces.</p>
+          <div class="app-pain">"Aspecto de web del año 2000. El buscador falla. Es el Google+ del mundo literario: todo el mundo lo critica y nadie se va... todavía."</div>
+        </div>
+        <div class="app-card">
+          <div class="app-card-type type-peliculas">🎬 Películas</div>
+          <div class="app-name">Letterboxd</div>
+          <p class="app-verdict">Referente de diseño. Pero solo hace películas — sin series, sin libros. Y la app de iOS está "rota".</p>
+          <div class="app-pain">"2,94 sobre 5 en Google Play. Fallos frecuentes en iPhone. Genial si solo ves cine y no te importan las series."</div>
+        </div>
+        <div class="app-card">
+          <div class="app-card-type type-series">📺 Series</div>
+          <div class="app-name">TVTime</div>
+          <p class="app-verdict">30 millones de usuarios registrados. Retirada temporalmente de la App Store en 2024 por disputa de derechos.</p>
+          <div class="app-pain">"Solo series. Vende tus datos a estudios y anunciantes. Crisis de confianza sin resolver."</div>
+        </div>
+      </div>
+      <div class="problem-coda">
+        <div class="problem-coda-quote">
+          Los millennials y la Gen Z consumen libros, películas y series como parte del <span class="hl">mismo stack cultural.</span> No deberían necesitar tres apps distintas para gestionarlo.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SOLUTION ────────────────────────────────────────────────────── -->
+  <section class="solution">
+    <div class="container">
+      <p class="mono section-label" style="color:var(--vermut);">La solución</p>
+      <h2 class="section-heading">cultay<span class="accent">.</span> lo tiene todo.</h2>
+      <p class="section-sub">Un solo lugar para seguir lo que lees, ves y quieres ver. Con un sistema de valoración que entiende el matiz, y un motor que sabe qué recomendarte cuando no tienes ni idea.</p>
+
+      <div class="pillars-grid">
+        <div class="pillar">
+          <div class="pillar-number">01 / PLATAFORMA</div>
+          <div class="pillar-icon pillar-icon-1">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C09040" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 9 H20 M9 4 V20"/></svg>
+          </div>
+          <div class="pillar-title">Todo en un único lugar</div>
+          <p class="pillar-desc">Libros, películas y series con estados claros — Quiero · En curso · Completado. Búsqueda integrada con TMDB, Google Books y TVDB. Estadísticas de todo lo que consumes.</p>
+          <div class="pillar-tags">
+            <span class="tag">tracking tripartito</span>
+            <span class="tag">importación Goodreads</span>
+            <span class="tag">estadísticas unificadas</span>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-number">02 / VALORACIÓN</div>
+          <div class="pillar-icon pillar-icon-2">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#E05A4A" stroke="#E05A4A" stroke-width="1"><path d="M12 3 L14.5 9 L21 9.5 L16 14 L17.5 21 L12 17.5 L6.5 21 L8 14 L3 9.5 L9.5 9 Z"/></svg>
+          </div>
+          <div class="pillar-title">Valoración que entiende el matiz</div>
+          <p class="pillar-desc">Más allá de las 5 estrellas. Ritmo, tono emocional y expectativa — como tiles visuales, sin formularios. Cada valoración alimenta las recomendaciones futuras.</p>
+          <div class="pillar-tags">
+            <span class="tag">half-stars 0.5–5</span>
+            <span class="tag">ritmo + tono</span>
+            <span class="tag">nota privada</span>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-number">03 / IA</div>
+          <div class="pillar-icon pillar-icon-3">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#8A9430" stroke="#8A9430" stroke-width="1"><path d="M12 2 L13.5 10 L21.5 12 L13.5 14 L12 22 L10.5 14 L2.5 12 L10.5 10 Z"/></svg>
+          </div>
+          <div class="pillar-title">Motor de recomendación contextual</div>
+          <p class="pillar-desc">¿Qué me apetece? Tres preguntas visuales, diez segundos, una recomendación que tiene en cuenta tu momento, tu historial y los patrones anónimos del colectivo.</p>
+          <div class="pillar-tags">
+            <span class="tag">mood-based</span>
+            <span class="tag">cruce entre categorías</span>
+            <span class="tag">aprende sin pedirte nada</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ¿QUÉ ME APETECE? ─────────────────────────────────────────────── -->
+  <section class="apetece">
+    <div class="container">
+      <div class="apetece-grid">
+        <div>
+          <p class="mono apetece-label">El diferenciador</p>
+          <h2 class="apetece-heading">
+            «¿Qué veo<br/>esta noche<span class="accent">?»</span>
+          </h2>
+          <p class="apetece-sub">
+            La pregunta que te haces tres veces por semana. En cultay. tiene respuesta en diez segundos. Sin scroll infinito, sin listas imposibles.
+          </p>
+          <div class="apetece-steps">
+            <div class="apetece-step">
+              <div class="step-num">1</div>
+              <p class="step-text"><strong>Dices cómo estás.</strong> Tiles visuales grandes: ¿Algo intenso o ligero? ¿Cuánto tiempo tienes? ¿Qué te ha dicho el día?</p>
+            </div>
+            <div class="apetece-step">
+              <div class="step-num">2</div>
+              <p class="step-text"><strong>El motor cruza todo.</strong> Tu wishlist, tus valoraciones pasadas y los patrones anónimos de personas con tu perfil de consumo.</p>
+            </div>
+            <div class="apetece-step">
+              <div class="step-num">3</div>
+              <p class="step-text"><strong>Recibes 3–5 recomendaciones</strong> con una línea de explicación. «Porque valoras el ritmo rápido y tienes 1 hora.»</p>
+            </div>
+          </div>
+        </div>
+        <!-- Apetece phone mockup -->
+        <div>
+          <div class="apetece-phone">
+            <div class="apetece-phone-body">
+              <div class="apetece-q-label">¿Qué te apetece?</div>
+              <div class="apetece-q-heading">
+                Cuéntame cómo<br/>estás hoy<span class="qdot">.</span>
+              </div>
+              <div class="mood-group">
+                <div class="mood-group-label">Intensidad</div>
+                <div class="mood-tiles">
+                  <div class="mood-tile">Algo ligero</div>
+                  <div class="mood-tile active">Algo denso</div>
+                  <div class="mood-tile">Me da igual</div>
+                </div>
+              </div>
+              <div class="mood-group">
+                <div class="mood-group-label">Tiempo disponible</div>
+                <div class="mood-tiles">
+                  <div class="mood-tile">30 min</div>
+                  <div class="mood-tile active">1–2 horas</div>
+                  <div class="mood-tile">Toda la noche</div>
+                </div>
+              </div>
+              <div class="mood-group">
+                <div class="mood-group-label">Formato</div>
+                <div class="mood-tiles">
+                  <div class="mood-tile">Libro</div>
+                  <div class="mood-tile">Peli</div>
+                  <div class="mood-tile active">Sorpréndeme</div>
+                </div>
+              </div>
+              <div class="apetece-cta-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="#BFCB5C" stroke="#BFCB5C" stroke-width="1"><path d="M12 2 L13.5 10 L21.5 12 L13.5 14 L12 22 L10.5 14 L2.5 12 L10.5 10 Z"/></svg>
+                Descubrir para mí
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── COMUNIDAD ───────────────────────────────────────────────────── -->
+  <section class="comunidad">
+    <div class="container">
+      <p class="mono comunidad-label">Comunidad</p>
+      <h2 class="comunidad-heading">
+        La primera comunidad cultural que habla en español de verdad.
+      </h2>
+      <p class="comunidad-sub">
+        500 millones de hispanohablantes. Cero plataformas de tracking que los traten como mercado prioritario. cultay. empieza en español.
+      </p>
+      <div class="bullets-grid">
+        <div class="bullet">
+          <div class="bullet-dot" style="background:var(--pistacho);"></div>
+          <p class="bullet-text"><strong>Interfaz y comunidad en español</strong> desde el primer día, no como traducción de segunda.</p>
+        </div>
+        <div class="bullet">
+          <div class="bullet-dot" style="background:var(--coral);"></div>
+          <p class="bullet-text"><strong>Catálogo hispanohablante</strong> con la misma relevancia que el anglosajón.</p>
+        </div>
+        <div class="bullet">
+          <div class="bullet-dot" style="background:var(--mantequilla);"></div>
+          <p class="bullet-text"><strong>Recomendaciones cruzadas</strong> entre pelis, series y libros que ningún competidor puede hacer.</p>
+        </div>
+        <div class="bullet">
+          <div class="bullet-dot" style="background:var(--pistacho);"></div>
+          <p class="bullet-text"><strong>Sin vender tus datos.</strong> Modelo freemium limpio. Tú eres el usuario, no el producto.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── WAITLIST ─────────────────────────────────────────────────────── -->
+  <section class="waitlist" id="waitlist">
+    <div class="container">
+      <span class="mono waitlist-label">Acceso anticipado</span>
+      <h2 class="waitlist-heading">
+        Sé de los primeros<br/>en probar cultay<span class="accent">.</span>
+      </h2>
+      <p class="waitlist-sub">
+        Estamos en beta privada. Déjanos tu email y te avisamos cuando abra tu hueco — con acceso gratuito durante el primer año.
+      </p>
+      <div class="waitlist-form-wrap">
+        <form class="waitlist-form" id="waitlist-form" onsubmit="handleWaitlistSubmit(event)">
+          <input type="email" placeholder="tu@email.com" required autocomplete="email" />
+          <button type="submit">Apuntarme</button>
+        </form>
+        <div class="success-msg" id="success-msg">
+          ✓ &nbsp;¡Apuntado/a! Te avisamos cuando abra la beta. Gracias por confiar en cultay.
+        </div>
+        <p class="waitlist-footnote">Sin spam. Solo el aviso de lanzamiento. Puedes darte de baja en cualquier momento.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ───────────────────────────────────────────────────────── -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-wordmark">cultay<span class="dot">.</span></div>
+        <div class="footer-copy">© 2026 cultay — Hecho con cariño en España</div>
+        <div class="footer-links">
+          <a href="mailto:hola@cultay.app" class="footer-link">Contacto</a>
+          <a href="#" class="footer-link">Privacidad</a>
+          <a href="#" class="footer-link">Instagram</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ── JS ──────────────────────────────────────────────────────────── -->
+  <script>
+    function handleHeroSubmit(e) {
+      e.preventDefault();
+      const email = e.target.querySelector('input[type="email"]').value;
+      // TODO: conectar con Mailchimp / ConvertKit / Supabase
+      console.log('Hero signup:', email);
+      e.target.innerHTML = '<p style="color:var(--vermut);font-family:\'Bricolage Grotesque\',sans-serif;font-weight:700;font-size:18px;">¡Apuntado/a! Te avisamos pronto.</p>';
+    }
+
+    function handleWaitlistSubmit(e) {
+      e.preventDefault();
+      const email = e.target.querySelector('input[type="email"]').value;
+      // TODO: conectar con Mailchimp / ConvertKit / Supabase
+      console.log('Waitlist signup:', email);
+      e.target.style.display = 'none';
+      document.getElementById('success-msg').classList.add('show');
+    }
+
+    // Smooth scroll para el nav CTA
+    document.querySelectorAll('a[href="#waitlist"]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        document.getElementById('waitlist').scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  </script>
+
+</body>
+</html>
