@@ -1248,9 +1248,6 @@
     </div>
   </footer>
 
-  <!-- iframe oculto: recibe la respuesta de Kit para no recargar la página -->
-  <iframe name="mc_hidden" style="display:none;" title="kit"></iframe>
-
   <!-- ── JS ──────────────────────────────────────────────────────────── -->
   <script>
     /* ─────────────────────────────────────────────────────────────────
@@ -1265,19 +1262,25 @@
     function wireForm(formId, onSuccess) {
       const form = document.getElementById(formId);
       if (!form) return;
-      if (KIT_ACTION) {
-        form.setAttribute('action', KIT_ACTION);
-        form.setAttribute('method', 'post');
-        form.setAttribute('target', 'mc_hidden');
-      }
-      form.addEventListener('submit', (e) => {
-        const email = form.querySelector('input[type="email"]').value;
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const input = form.querySelector('input[type="email"]');
+        const email = input ? input.value.trim() : '';
+        if (!email) return;
         if (!KIT_ACTION) {
           // Sin Kit configurado: no enviamos, solo mostramos el éxito (modo preview)
-          e.preventDefault();
           console.log('Signup (Kit no configurado):', email);
+          onSuccess(form);
+          return;
         }
-        // Si hay action, dejamos que el form se envíe al iframe oculto
+        try {
+          const data = new URLSearchParams();
+          data.append('email_address', email);
+          // no-cors: el envío se realiza aunque no podamos leer la respuesta de Kit
+          await fetch(KIT_ACTION, { method: 'POST', body: data, mode: 'no-cors' });
+        } catch (err) {
+          console.error('Error al enviar a Kit:', err);
+        }
         onSuccess(form);
       });
     }
