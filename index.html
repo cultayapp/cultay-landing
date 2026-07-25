@@ -921,11 +921,12 @@
           <p class="hero-sub">
             cultay. reúne tus libros, películas y series en un solo lugar — y te recomienda qué ver o leer en función de cómo estás hoy, no del algoritmo de siempre.
           </p>
-          <form class="hero-form" id="hero-form" onsubmit="handleHeroSubmit(event)">
-            <input type="email" placeholder="tu@email.com" required autocomplete="email" />
+          <form class="hero-form" id="hero-form">
+            <input type="email" name="email_address" placeholder="tu@email.com" required autocomplete="email" />
+            <!-- Kit gestiona el anti-spam automáticamente; no hace falta honeypot manual -->
             <button type="submit">Quiero acceso</button>
           </form>
-          <p class="hero-footnote">Sin spam. Solo un aviso cuando abra la beta.</p>
+          <p class="hero-footnote" id="hero-footnote">Sin spam. Solo un aviso cuando abra la beta.</p>
         </div>
         <div class="phone-wrap">
           <!-- Phone mockup: dark mode "¿Qué me apetece?" screen -->
@@ -1219,14 +1220,15 @@
         Apúntate y te avisamos cuando abra tu hueco — con acceso gratuito el primer año.
       </p>
       <div class="waitlist-form-wrap">
-        <form class="waitlist-form" id="waitlist-form" onsubmit="handleWaitlistSubmit(event)">
-          <input type="email" placeholder="tu@email.com" required autocomplete="email" />
+        <form class="waitlist-form" id="waitlist-form">
+          <input type="email" name="email_address" placeholder="tu@email.com" required autocomplete="email" />
+          <!-- Kit gestiona el anti-spam automáticamente; no hace falta honeypot manual -->
           <button type="submit">Apuntarme</button>
         </form>
         <div class="success-msg" id="success-msg">
-          ✓ &nbsp;Apuntado. Te avisamos en cuanto abra la beta.
+          ✓ &nbsp;Casi listo. Revisa tu email y confirma la suscripción para cerrar tu hueco.
         </div>
-        <p class="waitlist-footnote">Sin spam. Solo el aviso de lanzamiento. Puedes darte de baja en cualquier momento.</p>
+        <p class="waitlist-footnote">Sin spam. Solo el aviso de lanzamiento. Puedes darte de baja en cualquier momento. Al apuntarte aceptas la <a href="privacidad.html" style="color:var(--vermut);text-decoration:underline;">política de privacidad</a>.</p>
       </div>
     </div>
   </section>
@@ -1239,30 +1241,59 @@
         <div class="footer-copy">© 2026 cultay</div>
         <div class="footer-links">
           <a href="mailto:hello@cultay.com" class="footer-link">Contacto</a>
+          <a href="privacidad.html" class="footer-link">Privacidad</a>
           <a href="https://instagram.com/cultay.app" target="_blank" rel="noopener" class="footer-link">Instagram</a>
         </div>
       </div>
     </div>
   </footer>
 
+  <!-- iframe oculto: recibe la respuesta de Kit para no recargar la página -->
+  <iframe name="mc_hidden" style="display:none;" title="kit"></iframe>
+
   <!-- ── JS ──────────────────────────────────────────────────────────── -->
   <script>
-    function handleHeroSubmit(e) {
-      e.preventDefault();
-      const email = e.target.querySelector('input[type="email"]').value;
-      // TODO: conectar con Mailchimp / ConvertKit / Supabase
-      console.log('Hero signup:', email);
-      e.target.innerHTML = '<p style="color:var(--vermut);font-family:\'Bricolage Grotesque\',sans-serif;font-weight:700;font-size:18px;">Apuntado. Te avisamos pronto.</p>';
+    /* ─────────────────────────────────────────────────────────────────
+       CONFIGURACIÓN — pega aquí la URL del formulario de Kit.
+       En Kit:  Grow → Landing Pages & Forms → crea/abre un Form →
+       Embed → pestaña "HTML". Copia el valor del atributo "action" del
+       <form> (tiene el formato https://app.kit.com/forms/XXXXXX/subscriptions).
+       Mientras esté vacía, los forms solo registran el email en consola.
+       ───────────────────────────────────────────────────────────────── */
+    const KIT_ACTION = "https://app.kit.com/forms/9726292/subscriptions";
+
+    function wireForm(formId, onSuccess) {
+      const form = document.getElementById(formId);
+      if (!form) return;
+      if (KIT_ACTION) {
+        form.setAttribute('action', KIT_ACTION);
+        form.setAttribute('method', 'post');
+        form.setAttribute('target', 'mc_hidden');
+      }
+      form.addEventListener('submit', (e) => {
+        const email = form.querySelector('input[type="email"]').value;
+        if (!KIT_ACTION) {
+          // Sin Kit configurado: no enviamos, solo mostramos el éxito (modo preview)
+          e.preventDefault();
+          console.log('Signup (Kit no configurado):', email);
+        }
+        // Si hay action, dejamos que el form se envíe al iframe oculto
+        onSuccess(form);
+      });
     }
 
-    function handleWaitlistSubmit(e) {
-      e.preventDefault();
-      const email = e.target.querySelector('input[type="email"]').value;
-      // TODO: conectar con Mailchimp / ConvertKit / Supabase
-      console.log('Waitlist signup:', email);
-      e.target.style.display = 'none';
+    // Hero: sustituye el form por un mensaje de confirmación
+    wireForm('hero-form', (form) => {
+      form.innerHTML = '<p style="color:var(--vermut);font-family:\'Bricolage Grotesque\',sans-serif;font-weight:700;font-size:18px;">Casi listo. Revisa tu email y confirma la suscripción.</p>';
+      const fn = document.getElementById('hero-footnote');
+      if (fn) fn.style.display = 'none';
+    });
+
+    // Waitlist: oculta el form y muestra el bloque de éxito
+    wireForm('waitlist-form', (form) => {
+      form.style.display = 'none';
       document.getElementById('success-msg').classList.add('show');
-    }
+    });
 
     // Smooth scroll para el nav CTA
     document.querySelectorAll('a[href="#waitlist"]').forEach(a => {
