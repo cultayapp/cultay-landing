@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cultay. — Suscripción confirmada</title>
+  <meta name="description" content="Tu suscripción a la beta de cultay está confirmada." />
+  <meta name="robots" content="noindex" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" />
+
+  <style>
+    :root {
+      --hueso:#F2E7CE; --arena:#E5D5B5; --ink:#1F1612; --vermut:#B22838;
+      --coral:#F47265; --pistacho:#BFCB5C; --berenjena:#381B2A;
+      --line:rgba(31,22,18,0.10); --line-med:rgba(31,22,18,0.18);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{
+      background:var(--hueso);color:var(--ink);
+      font-family:'Geist',sans-serif;font-size:16px;line-height:1.6;
+      -webkit-font-smoothing:antialiased;
+      min-height:100vh;display:flex;flex-direction:column;
+    }
+    a{color:inherit;text-decoration:none;}
+
+    nav{border-bottom:1px solid var(--line);padding:14px 0;}
+    .container{width:100%;max-width:640px;margin:0 auto;padding:0 24px;}
+    .wordmark{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:24px;letter-spacing:-0.045em;line-height:1;color:var(--ink);}
+    .wordmark .dot{color:var(--vermut);}
+
+    main{flex:1;display:flex;align-items:center;justify-content:center;padding:64px 0;}
+    .card{text-align:center;}
+    .check{
+      width:64px;height:64px;border-radius:50%;
+      background:rgba(191,203,92,0.18);border:1.5px solid var(--pistacho);
+      display:flex;align-items:center;justify-content:center;margin:0 auto 28px;
+    }
+    .kicker{font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--vermut);margin-bottom:14px;}
+    h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(34px,6vw,52px);letter-spacing:-0.04em;line-height:0.98;margin-bottom:18px;}
+    h1 .dot{color:var(--vermut);}
+    .lead{font-size:18px;line-height:1.55;color:rgba(31,22,18,0.72);max-width:460px;margin:0 auto 36px;}
+    .cta{
+      display:inline-block;background:var(--ink);color:var(--hueso);
+      font-family:'Geist',sans-serif;font-size:15px;font-weight:500;
+      padding:13px 24px;border-radius:8px;transition:background 0.18s;
+    }
+    .cta:hover{background:var(--berenjena);}
+    .note{margin-top:22px;font-size:13px;color:rgba(31,22,18,0.5);}
+    .mark{display:block;margin:20px auto 0;border-radius:11px;}
+
+    footer{border-top:1px solid var(--line);padding:24px 0;}
+    .footer-inner{display:flex;align-items:center;justify-content:space-between;}
+    .footer-copy{font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:0.1em;color:rgba(31,22,18,0.4);text-transform:uppercase;}
+    .footer-copy .dot{color:var(--vermut);}
+    @media (max-width:540px){.footer-inner{flex-direction:column;gap:12px;text-align:center;}}
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="container">
+      <a href="index.html" class="wordmark">cultay<span class="dot">.</span></a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      <div class="card">
+        <div class="check">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#8A9430" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 L9 17 L4 12"/></svg>
+        </div>
+        <p class="kicker">Beta privada</p>
+        <h1>Estás dentro<span class="dot">.</span></h1>
+        <p class="lead">
+          Tu suscripción está confirmada. Y por llegar pronto, tendrás ventajas que no se repetirán: acceso prioritario cuando abramos, funciones antes que nadie y condiciones especiales para quienes estuvieron desde el principio. Nada de spam por el camino.
+        </p>
+        <a href="index.html" class="cta">Volver a cultay.</a>
+        <p class="note">Mientras tanto, ve pensando qué tienes pendiente de leer y de ver.</p>
+        <svg class="mark" width="46" height="46" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="cultay">
+          <rect width="100" height="100" fill="#1F1612"></rect>
+          <path d="M 78 28 A 30 30 0 1 0 78 72" fill="none" stroke="#F2E7CE" stroke-width="22" stroke-linecap="butt"></path>
+          <circle cx="84" cy="80" r="9" fill="#F47265"></circle>
+        </svg>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-copy">© 2026 cultay<span class="dot">.</span></div>
+        <div class="footer-copy">Nos vemos pronto</div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
