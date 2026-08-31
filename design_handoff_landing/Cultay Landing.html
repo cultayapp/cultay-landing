@@ -5,31 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>cultay. — Todo lo que lees, ves y llevas semanas sin decidir.</title>
 <meta name="description" content="cultay reúne tus libros, películas y series en un solo sitio — y te dice qué ver o leer esta noche según cómo estás hoy.">
-<link rel="canonical" href="https://cultay.com/">
-<meta property="og:title" content="cultay. — Todo lo que lees, ves y llevas semanas sin decidir.">
-<meta property="og:description" content="cultay reúne tus libros, películas y series en un solo sitio — y te dice qué ver o leer esta noche según cómo estás hoy.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://cultay.com/">
-<meta property="og:image" content="https://cultay.com/og-cultay-1200x630.png">
-<meta name="twitter:card" content="summary_large_image">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link rel="icon" type="image/png" href="favicon.png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preload" href="fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="landing.css">
-<!--
-  ESTADO DE ESTE ARCHIVO — ver design_handoff_landing/IMPLEMENTACION.md antes de tocarlo.
-  Portadas reales ya incorporadas (30 ago 2026, /covers/, 16 títulos) — image-slot.js
-  retirado del todo.
-  Captura real de /biblioteca en la sección "La app" ya integrada (31 ago 2026,
-  /shots/biblioteca-{light,dark}.webp) — maqueta HTML (#appMock), fitShot() y --croph
-  retirados del todo.
-  Confirmado por Marta (30 ago 2026): TikTok/X del footer son reales y con contenido;
-  catálogo de títulos de ejemplo se mantiene tal cual; el plan gratuito de la FAQ se
-  reformuló sin prometer "para siempre" — confirmar la redacción final con el equipo
-  de producto antes de publicar.
--->
-<link rel="preload" as="image" href="covers/arrival.webp" fetchpriority="high">
+<script src="image-slot.js"></script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -77,7 +56,7 @@
     <div class="result">
       <svg class="gm" viewBox="0 0 100 100"><use href="#i-mark"></use></svg>
       <div class="rgrid">
-        <div class="cover"><img src="covers/arrival.webp" alt="Portada de La llegada" width="500" height="750" loading="eager" fetchpriority="high"></div>
+        <div class="cover"><image-slot id="heroCover" placeholder="Portada · La llegada"></image-slot></div>
         <div>
           <div class="cap">Recomendar · película</div>
           <h2 class="d md" style="margin-top:12px">La llegada<i>.</i></h2>
@@ -109,7 +88,7 @@
       <div class="acts"><button class="btn p" id="goBtn"><svg class="ic s"><use href="#i-sparkle"></use></svg>Recomiéndame algo</button><span class="fine">Diez segundos. Sin registro.</span></div>
       <div id="demoResult" hidden aria-live="polite">
         <div class="dres">
-          <div class="cover"><img id="demoCover" src="covers/aftersun.webp" alt="" width="500" height="750" loading="lazy"></div>
+          <div class="cover"><image-slot id="demoCover" placeholder="Portada"></image-slot></div>
           <div>
             <div class="cap" id="dCap">Resultado</div>
             <h3 class="d md" id="dTitle" style="margin-top:12px">—</h3>
@@ -161,7 +140,35 @@
         <div class="tswitch" id="tsw"><button aria-pressed="true" data-t="light">Claro</button><button data-t="dark">Oscuro</button></div>
       </div>
       <div class="viewport">
-        <img id="appShot" class="appshot" src="shots/biblioteca-light.webp" width="1440" height="1342" alt="La biblioteca de cultay: portadas, estados y filtros por título, autor o director." loading="lazy" decoding="async">
+        <div class="app" id="appMock">
+          <div class="anav">
+            <div class="brand" style="color:var(--ink)"><svg class="ic" style="width:30px;height:30px" viewBox="0 0 100 100"><use href="#i-mark"></use></svg><span class="wm">cultay<i>.</i></span></div>
+            <div class="alinks"><span class="on">Biblioteca</span><span>Recomendar</span><span>Mis listas</span><span>Perfil</span></div>
+          </div>
+          <div class="apage">
+            <div class="cap">Biblioteca</div>
+            <h3 class="ah1">Mi biblioteca<i>.</i></h3>
+            <div class="afield"><svg class="ic"><use href="#i-search"></use></svg><span>Buscar por título, autor o director…</span></div>
+            <div class="afil">
+              <span class="achip on">Todo <b>7</b></span><span class="achip">Películas <b>3</b></span><span class="achip">Series <b>2</b></span><span class="achip">Libros <b>2</b></span>
+              <span class="vsep"></span>
+              <span class="achip">Quiero <b>2</b></span><span class="achip">En curso <b>1</b></span><span class="achip">Completado <b>4</b></span>
+              <span class="achip" style="margin-left:auto;color:var(--muted)"><svg class="ic s"><use href="#i-sliders"></use></svg>Ordenar: añadido</span>
+            </div>
+            <div class="lgrid">
+              <div><div class="bcov"><image-slot id="mk1" placeholder="Portada"></image-slot><span class="badge visto">Visto</span></div><div class="btit">Interstellar</div><div class="bmeta"><i class="pdot pelicula"></i>Película · 2014<span class="arate"><svg class="ic s fill"><use href="#i-starfill"></use></svg>4,5</span></div></div>
+              <div><div class="bcov"><image-slot id="mk2" placeholder="Portada"></image-slot><span class="badge curso">En curso</span></div><div class="btit">Severance</div><div class="bmeta"><i class="pdot serie"></i>Serie · T2 E4</div></div>
+              <div><div class="bcov"><image-slot id="mk3" placeholder="Portada"></image-slot><span class="badge quiero">Quiero</span></div><div class="btit">El problema de los tres cuerpos</div><div class="bmeta"><i class="pdot libro"></i>Libro · 2008</div></div>
+              <div><div class="bcov"><image-slot id="mk4" placeholder="Portada"></image-slot><span class="badge visto">Visto</span></div><div class="btit">La llegada</div><div class="bmeta"><i class="pdot pelicula"></i>Película · 2016<span class="arate"><svg class="ic s fill"><use href="#i-starfill"></use></svg>5,0</span></div></div>
+              <div><div class="bcov"><image-slot id="mk5" placeholder="Portada"></image-slot><span class="badge visto">Visto</span></div><div class="btit">Los detectives salvajes</div><div class="bmeta"><i class="pdot libro"></i>Libro · 1998<span class="arate"><svg class="ic s fill"><use href="#i-starfill"></use></svg>4,0</span></div></div>
+              <div><div class="bcov"><image-slot id="mk6" placeholder="Portada"></image-slot><span class="badge quiero">Quiero</span></div><div class="btit">Dune. Parte dos</div><div class="bmeta"><i class="pdot pelicula"></i>Película · 2024</div></div>
+              <div><div class="bcov"><image-slot id="mk7" placeholder="Portada"></image-slot><span class="badge curso">En curso</span></div><div class="btit">Shōgun</div><div class="bmeta"><i class="pdot serie"></i>Serie · T1 E6</div></div>
+              <div><div class="bcov"><image-slot id="mk8" placeholder="Portada"></image-slot><span class="badge visto">Visto</span></div><div class="btit">Éramos unos niños</div><div class="bmeta"><i class="pdot libro"></i>Libro · 2010<span class="arate"><svg class="ic s fill"><use href="#i-starfill"></use></svg>4,5</span></div></div>
+              <div><div class="bcov"><image-slot id="mk9" placeholder="Portada"></image-slot><span class="badge visto">Visto</span></div><div class="btit">Aniquilación</div><div class="bmeta"><i class="pdot pelicula"></i>Película · 2018</div></div>
+              <div><div class="bcov"><image-slot id="mk10" placeholder="Portada"></image-slot><span class="badge quiero">Quiero</span></div><div class="btit">Pachinko</div><div class="bmeta"><i class="pdot serie"></i>Serie · 2022</div></div>
+            </div>
+          </div>
+        </div>
         <div class="fade"></div>
       </div>
     </div>
@@ -228,9 +235,9 @@
       <h2 class="d lg">Las dudas de siempre<i>.</i></h2>
     </div>
     <div class="faq">
-      <details open><summary>¿Cuánto cuesta?<svg class="ic"><use href="#i-chev"></use></svg></summary><p>Habrá un plan gratuito con la biblioteca, los estados y la búsqueda. Quien entre por la beta privada tiene además todas las funciones de pago gratis el primer año — incluidas las recomendaciones ilimitadas y las estadísticas completas.</p></details>
+      <details open><summary>¿Cuánto cuesta?<svg class="ic"><use href="#i-chev"></use></svg></summary><p>Habrá un plan gratuito para siempre con la biblioteca, los estados y la búsqueda. Quien entre por la beta privada tiene además todas las funciones de pago gratis el primer año — incluidas las recomendaciones ilimitadas y las estadísticas completas.</p></details>
       <details><summary>¿Puedo traer lo que ya tengo en otras apps?<svg class="ic"><use href="#i-chev"></use></svg></summary><p>Sí. Las apps de lectura y de cine más usadas exportan un CSV, y cultay lo importa mapeando las columnas automáticamente: título, autor o director, fecha y valoración. Puedes revisar el mapeo antes de confirmar, y no se crean duplicados si importas dos veces.</p></details>
-      <details><summary>¿De dónde salen los datos y las portadas?<svg class="ic"><use href="#i-chev"></use></svg></summary><p>De catálogos y bases de datos especializadas de cine, series y libros. Si falta un título, puedes añadirlo a mano y lo revisamos.</p></details>
+      <details><summary>¿De dónde salen los datos y las portadas?<svg class="ic"><use href="#i-chev"></use></svg></summary><p>De catálogos abiertos y bases de datos con licencia para películas, series y libros. Si falta un título, puedes añadirlo a mano y lo revisamos.</p></details>
       <details><summary>¿Hay app para el móvil?<svg class="ic"><use href="#i-chev"></use></svg></summary><p>La beta abre como aplicación web, que funciona en el móvil y se puede instalar en la pantalla de inicio. Las apps nativas de iOS y Android van después, y quien esté en la beta entra primero.</p></details>
       <details><summary>¿Qué hacéis con lo que registro?<svg class="ic"><use href="#i-chev"></use></svg></summary><p>Sirve para recomendarte mejor y para tus estadísticas. No se vende, no se cede a anunciantes y no hay perfilado publicitario. Tu biblioteca es privada salvo lo que tú decidas hacer público en tu perfil, y puedes exportarla o borrarla entera cuando quieras.</p></details>
       <details><summary>¿Cuándo abre?<svg class="ic"><use href="#i-chev"></use></svg></summary><p>Por tandas, para no romper nada. Al apuntarte recibes un solo correo cuando te toque el hueco — no hay lista de espera pública ni sistema de invitaciones que haya que compartir.</p></details>
@@ -246,13 +253,11 @@
     <h2 class="d lg" style="margin-top:20px;max-width:640px">Únete a la beta privada<i>.</i></h2>
     <p class="lead">Te avisamos cuando abra tu hueco, con acceso gratuito el primer año. Un correo, no una newsletter.</p>
     <form class="form" id="betaForm">
-      <label><input type="email" name="email_address" placeholder="tu@correo.com" required autocomplete="email" aria-label="Tu correo"></label>
+      <label><input type="email" placeholder="tu@correo.com" required aria-label="Tu correo"></label>
       <button class="btn inv" type="submit">Apuntarme</button>
     </form>
-    <div class="success-msg" id="successMsg" aria-live="polite">✓ Casi listo. Revisa tu email y confirma la suscripción para cerrar tu hueco.</div>
-    <p class="form-error" id="formError" role="alert">No se pudo enviar. Inténtalo de nuevo en unos segundos.</p>
     <div class="counter" hidden><span class="avs"><i></i><i></i><i></i></span>— personas ya en la lista</div>
-    <p class="ctafine" id="ctaFine">Sin spam. Solo el aviso de lanzamiento, y puedes darte de baja en cualquier momento. Al apuntarte aceptas la <a href="privacidad.html">política de privacidad</a>.</p>
+    <p class="ctafine">Sin spam. Solo el aviso de lanzamiento, y puedes darte de baja en cualquier momento. Al apuntarte aceptas la <a href="https://www.cultay.com/privacidad.html">política de privacidad</a>.</p>
   </div>
 </section>
 
@@ -267,7 +272,7 @@
       </div>
       <div><h4>Producto</h4><ul><li><a href="#demo">La pregunta</a></li><li><a href="#app">La app</a></li><li><a href="#beta">Beta privada</a></li><li><a href="#faq">Dudas</a></li></ul></div>
       <div><h4>Redes</h4><ul><li><a href="https://instagram.com/cultay.app">Instagram</a></li><li><a href="https://www.tiktok.com/@cultay.app">TikTok</a></li><li><a href="https://x.com/cultayapp">X</a></li></ul></div>
-      <div><h4>cultay</h4><ul><li><a href="mailto:hello@cultay.com">Contacto</a></li><li><a href="privacidad.html">Privacidad</a></li></ul></div>
+      <div><h4>cultay</h4><ul><li><a href="mailto:hello@cultay.com">Contacto</a></li><li><a href="https://www.cultay.com/privacidad.html">Privacidad</a></li></ul></div>
     </div>
     <div class="fbot"><span>© 2026 cultay</span><span>Hecho en español</span></div>
   </div>
@@ -327,14 +332,6 @@ function clause(e,tk){
   if(tk==='t120') return e.dur<=125?'Pediste una o dos horas y son '+e.dur+' min: entra justa.':'Son '+e.dur+' min, algo más de lo que pediste, pero es la que mejor encaja.';
   return 'Con toda la noche, '+e.dur+' min te dejan margen de sobra.';
 }
-// portada real por título — mismo catálogo de 16 imágenes que cubre hero + demo + maqueta
-const COVERS={
-  'La llegada':'arrival.webp','Drive My Car':'drive_my_car.webp','Aftersun':'aftersun.webp',
-  'Perfect Days':'perfect_days.webp','Dune. Parte dos':'dune_part_two.webp','Severance':'severance.webp',
-  'Shōgun':'shogun.webp','Fleabag':'fleabag.webp','Ted Lasso':'ted_lasso.webp','Pachinko':'pachinko.webp',
-  'Los detectives salvajes':'los_detectives_salvajes.webp','El problema de los tres cuerpos':'el_problema_de_los_tres_cuerpos.webp',
-  'Los asquerosos':'los_asquerosos.webp','Éramos unos niños':'eramos_unos_ninos.webp','Aniquilación':'annihilation.webp'
-};
 const pick=g=>document.querySelector('.chips[data-group='+g+'] .chip[aria-pressed=true]');
 const seen={};
 function recommend(){
@@ -348,8 +345,8 @@ function recommend(){
   document.getElementById('dMeta').textContent=e.m;
   document.getElementById('dDot').className='pdot '+e.f;
   document.getElementById('dWhy').innerHTML=clause(e,tk)+' '+e.w;
-  const cover=document.getElementById('demoCover');
-  if(cover&&COVERS[e.t]){cover.src='covers/'+COVERS[e.t];cover.alt='Portada de '+e.t;}
+  const slot=document.getElementById('demoCover');
+  if(slot&&!slot.hasAttribute('data-filled')) slot.setAttribute('placeholder','Portada · '+e.t);
   document.getElementById('demoResult').hidden=false;
 }
 document.getElementById('goBtn').addEventListener('click',recommend);
@@ -359,50 +356,30 @@ document.querySelectorAll('.chips[data-group]').forEach(g=>g.addEventListener('c
   if(e.target.closest('.chip')&&!document.getElementById('demoResult').hidden){seen[pick('kind').dataset.v+'|'+pick('mood').dataset.v]=0;recommend();}
 }));
 // conmutador claro/oscuro del mockup — la única pieza con tema en toda la landing
-const tsw=document.getElementById('tsw'),shotImg=document.getElementById('appShot');
+const tsw=document.getElementById('tsw'),mock=document.getElementById('appMock');
 tsw.addEventListener('click',e=>{
   const b=e.target.closest('button'); if(!b) return;
   tsw.querySelectorAll('button').forEach(x=>x.removeAttribute('aria-pressed'));
   b.setAttribute('aria-pressed','true');
-  shotImg.src=b.dataset.t==='dark'?'shots/biblioteca-dark.webp':'shots/biblioteca-light.webp';
+  if(b.dataset.t==='dark') mock.setAttribute('data-theme','dark'); else mock.removeAttribute('data-theme');
 });
+// el mockup se escala al ancho real del contenedor: nunca se recorta de lado
+function fitShot(){
+  const vp=document.querySelector('.viewport'),app=document.getElementById('appMock');
+  if(!vp||!app) return;
+  const dw=parseFloat(getComputedStyle(app).width)||1440;
+  const sc=vp.clientWidth/dw;
+  app.style.transform='scale('+sc+')';
+  const ch=parseFloat(getComputedStyle(vp).getPropertyValue('--croph'))||770;
+  vp.style.height=Math.round(ch*sc)+'px';
+}
+fitShot();addEventListener('resize',fitShot);
+if(window.ResizeObserver) new ResizeObserver(fitShot).observe(document.querySelector('.shot'));
+document.fonts&&document.fonts.ready.then(fitShot);
 // borde del nav al hacer scroll
 const nav=document.getElementById('nav');
 addEventListener('scroll',()=>nav.classList.toggle('stuck',scrollY>12),{passive:true});
-
-// ── formulario de beta → Kit (mismo endpoint que cultay.com/index.html) ────
-// En Kit: Grow → Landing Pages & Forms → Form → Embed → pestaña "HTML".
-// Copia el valor "action" del <form> (formato https://app.kit.com/forms/XXXXXX/subscriptions).
-const KIT_ACTION="https://app.kit.com/forms/9726292/subscriptions";
-const betaForm=document.getElementById('betaForm');
-const successMsg=document.getElementById('successMsg');
-const formError=document.getElementById('formError');
-const ctaFine=document.getElementById('ctaFine');
-betaForm.addEventListener('submit', async e=>{
-  e.preventDefault();
-  const input=betaForm.querySelector('input[type=email]');
-  const email=input.value.trim();
-  if(!email) return;
-  formError.classList.remove('show');
-  const btn=betaForm.querySelector('button[type=submit]');
-  const label=btn.textContent;
-  btn.disabled=true; btn.textContent='Enviando…';
-  try{
-    if(KIT_ACTION){
-      const data=new URLSearchParams();
-      data.append('email_address',email);
-      // no-cors: el envío se realiza aunque no podamos leer la respuesta de Kit
-      await fetch(KIT_ACTION,{method:'POST',body:data,mode:'no-cors'});
-    }
-    betaForm.style.display='none';
-    if(ctaFine) ctaFine.hidden=true;
-    successMsg.classList.add('show');
-  }catch(err){
-    console.error('Error al enviar a Kit:',err);
-    formError.classList.add('show');
-    btn.disabled=false; btn.textContent=label;
-  }
-});
+document.getElementById('betaForm').addEventListener('submit',e=>e.preventDefault());
 </script>
 </body>
 </html>
