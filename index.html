@@ -81,7 +81,7 @@
         <div>
           <div class="cap">Recomendar · película</div>
           <h2 class="d md" style="margin-top:12px">La llegada<i>.</i></h2>
-          <div class="rmeta"><i class="pdot pelicula"></i>Película · 2016 · 116 min · Ciencia ficción</div>
+          <div class="rmeta"><span class="ttag pelicula">Película</span>2016 · 116 min · Ciencia ficción</div>
           <div class="why">
             <div class="cap"><svg class="ic s"><use href="#i-sparkle"></use></svg>Por qué esta</div>
             <p>Pediste algo <b>denso</b> y tienes dos horas. Puntuaste <b>Interstellar</b> con un 4,5 y dejaste <b>Aniquilación</b> a medias: esta va por el mismo sitio, pero se resuelve con lenguaje y no con espectáculo.</p>
@@ -113,7 +113,7 @@
           <div>
             <div class="cap" id="dCap">Resultado</div>
             <h3 class="d md" id="dTitle" style="margin-top:12px">—</h3>
-            <div class="rmeta"><i class="pdot pelicula" id="dDot"></i><span id="dMeta">—</span></div>
+            <div class="rmeta"><span class="ttag pelicula" id="dDot">Película</span><span id="dMeta">—</span></div>
             <div class="why">
               <div class="cap"><svg class="ic s"><use href="#i-sparkle"></use></svg>Por qué esta</div>
               <p id="dWhy">—</p>
@@ -345,8 +345,11 @@ function recommend(){
   const e=set[seen[key]%set.length];seen[key]++;
   document.getElementById('dCap').textContent='Recomendar · '+k.dataset.s+' · '+mo.dataset.s+' · '+ti.dataset.s;
   document.getElementById('dTitle').innerHTML=e.t+'<i>.</i>';
-  document.getElementById('dMeta').textContent=e.m;
-  document.getElementById('dDot').className='pdot '+e.f;
+  const TYPELABEL={pelicula:'Película',serie:'Serie',libro:'Libro'};
+  document.getElementById('dMeta').textContent=e.m.replace(/^(Película|Serie|Libro)\s*·\s*/,'');
+  const dTag=document.getElementById('dDot');
+  dTag.className='ttag '+e.f;
+  dTag.textContent=TYPELABEL[e.f];
   document.getElementById('dWhy').innerHTML=clause(e,tk)+' '+e.w;
   const cover=document.getElementById('demoCover');
   if(cover&&COVERS[e.t]){cover.src='covers/'+COVERS[e.t];cover.alt='Portada de '+e.t;}
