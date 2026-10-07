@@ -244,15 +244,34 @@
   <div class="wrap">
     <div class="cap">Acceso anticipado</div>
     <h2 class="d lg" style="margin-top:20px;max-width:640px">Únete a la beta privada<i>.</i></h2>
-    <p class="lead">Te avisamos cuando abra tu hueco, con acceso gratuito el primer año. Un correo, no una newsletter.</p>
+    <p class="lead">Gratis durante la beta, en iPhone y Android. Abrimos por tandas y te escribimos cuando te toque. Quien entra en la beta tendrá condiciones de fundador cuando haya planes de pago.</p>
     <form class="form" id="betaForm">
-      <label><input type="email" name="email_address" placeholder="tu@correo.com" required autocomplete="email" aria-label="Tu correo"></label>
+      <label class="email"><input type="email" name="email_address" placeholder="tu@correo.com" required autocomplete="email" aria-label="Tu correo"></label>
+      <fieldset class="fset" id="fsMovil" aria-required="true" aria-describedby="movilError">
+        <legend>¿Qué móvil usas?</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="fields[movil]" value="iphone"><span>iPhone</span></label>
+          <label class="opt"><input type="radio" name="fields[movil]" value="android"><span>Android</span></label>
+        </div>
+        <p class="ferr" id="movilError" role="alert">Elige iPhone o Android para apuntarte.</p>
+      </fieldset>
+      <fieldset class="fset" aria-describedby="tvTimeHelp">
+        <legend>¿Usabas TV Time?<span class="opc">Opcional</span></legend>
+        <p class="fhelp" id="tvTimeHelp">Nos ayuda a decidir qué historiales se pueden traer.</p>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="fields[tv_time]" value="no"><span>No</span></label>
+          <label class="opt"><input type="radio" name="fields[tv_time]" value="si_archivo"><span>Sí, y guardé mi archivo antes del cierre</span></label>
+          <label class="opt"><input type="radio" name="fields[tv_time]" value="si_sin_archivo"><span>Sí, pero no lo guardé</span></label>
+        </div>
+      </fieldset>
+      <label class="fcheck"><input type="checkbox" name="fields[carta]" value="si"><span>Mándame también «Para este finde», la carta semanal de cultay: qué ver y leer el fin de semana, y cómo va la app.</span></label>
+      <input type="hidden" name="fields[origen]" value="">
       <button class="btn inv" type="submit">Apuntarme</button>
     </form>
-    <div class="success-msg" id="successMsg" aria-live="polite">✓ Casi listo. Revisa tu email y confirma la suscripción para cerrar tu hueco.</div>
+    <div class="success-msg" id="successMsg" aria-live="polite">Casi está. Revisa tu correo y confirma para guardar tu hueco.</div>
     <p class="form-error" id="formError" role="alert">No se pudo enviar. Inténtalo de nuevo en unos segundos.</p>
     <div class="counter" hidden><span class="avs"><i></i><i></i><i></i></span>— personas ya en la lista</div>
-    <p class="ctafine" id="ctaFine">Sin spam. Solo el aviso de lanzamiento, y puedes darte de baja en cualquier momento. Al apuntarte aceptas la <a href="privacidad.html">política de privacidad</a>.</p>
+    <p class="ctafine" id="ctaFine">Te das de baja con un clic en cualquier correo. Al apuntarte aceptas la <a href="privacidad.html">política de privacidad</a>.</p>
   </div>
 </section>
 
@@ -373,30 +392,49 @@ tsw.addEventListener('click',e=>{
 const nav=document.getElementById('nav');
 addEventListener('scroll',()=>nav.classList.toggle('stuck',scrollY>12),{passive:true});
 
-// ── formulario de beta → Kit (mismo endpoint que cultay.com/index.html) ────
-// En Kit: Grow → Landing Pages & Forms → Form → Embed → pestaña "HTML".
-// Copia el valor "action" del <form> (formato https://app.kit.com/forms/XXXXXX/subscriptions).
+// ── formulario de beta → Kit ───────────────────────────────────────────────
+// Dos formularios de Kit con los mismos campos: «Carta» (su correo de confirmación
+// menciona la carta semanal) si se marca la casilla; el de siempre si no.
 const KIT_ACTION="https://app.kit.com/forms/9726292/subscriptions";
+const KIT_ACTION_CARTA="https://app.kit.com/forms/10015694/subscriptions";
 const betaForm=document.getElementById('betaForm');
 const successMsg=document.getElementById('successMsg');
 const formError=document.getElementById('formError');
 const ctaFine=document.getElementById('ctaFine');
+const movilError=document.getElementById('movilError');
+// origen de la visita: ?o=ig|tt|x|nl… — solo se lee de la URL, sin cookies ni almacenamiento
+betaForm.elements['fields[origen]'].value=(new URLSearchParams(location.search).get('o')||'').toLowerCase().replace(/[^a-z0-9_-]/g,'').slice(0,20);
+// «¿Usabas TV Time?» es opcional: volver a pulsar la opción marcada la desmarca
+betaForm.querySelectorAll('input[name="fields[tv_time]"]').forEach(r=>{
+  let was=false;
+  r.addEventListener('pointerdown',()=>{was=r.checked;});
+  r.addEventListener('click',()=>{if(was) r.checked=false; was=false;});
+});
+betaForm.querySelectorAll('input[name="fields[movil]"]').forEach(r=>r.addEventListener('change',()=>movilError.classList.remove('show')));
 betaForm.addEventListener('submit', async e=>{
   e.preventDefault();
-  const input=betaForm.querySelector('input[type=email]');
-  const email=input.value.trim();
+  const email=betaForm.elements.email_address.value.trim();
   if(!email) return;
+  const movil=betaForm.elements['fields[movil]'].value;
+  if(!movil){
+    movilError.classList.add('show');
+    betaForm.querySelector('input[name="fields[movil]"]').focus();
+    return;
+  }
+  const carta=betaForm.elements['fields[carta]'].checked;
   formError.classList.remove('show');
   const btn=betaForm.querySelector('button[type=submit]');
   const label=btn.textContent;
   btn.disabled=true; btn.textContent='Enviando…';
   try{
-    if(KIT_ACTION){
-      const data=new URLSearchParams();
-      data.append('email_address',email);
-      // no-cors: el envío se realiza aunque no podamos leer la respuesta de Kit
-      await fetch(KIT_ACTION,{method:'POST',body:data,mode:'no-cors'});
-    }
+    const data=new URLSearchParams();
+    data.append('email_address',email);
+    data.append('fields[movil]',movil);
+    data.append('fields[tv_time]',betaForm.elements['fields[tv_time]'].value);
+    data.append('fields[carta]',carta?'si':'no');
+    data.append('fields[origen]',betaForm.elements['fields[origen]'].value);
+    // no-cors: el envío se realiza aunque no podamos leer la respuesta de Kit
+    await fetch(carta?KIT_ACTION_CARTA:KIT_ACTION,{method:'POST',body:data,mode:'no-cors'});
     betaForm.style.display='none';
     if(ctaFine) ctaFine.hidden=true;
     successMsg.classList.add('show');
